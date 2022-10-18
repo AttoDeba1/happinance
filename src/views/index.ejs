@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <!-- Bootstrap && datatable CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+      <script src="http://cdn.datatables.net/plug-ins/1.10.15/dataRender/datetime.js"></script>
+  </head>
+
+  <script>
+    $(document).ready(function(){
+      var dataTable = $('#temperature_table').DataTable({
+          columnDefs:[
+              {targets:3, render:function(data){
+                      return  parseFloat(data).toFixed(2)+ "°C ";
+                  }},
+              {targets:4, render:function(data){
+                      return new Date(data).toLocaleDateString();
+                  }}
+          ]
+      });
+    });
+    function onChangeCity(e) {
+      console.log(e)
+      $.get('/temperature/average?city='+e.value, function (response) {
+          $('#selected_city').html(response.city);
+          $('#avg_temperature').html(response.avg_temperature);
+
+      });
+      $('form#cities').trigger( "submit" )()
+    }
+  </script>
+  <body class="">
+    <div class="container">
+        <h1><%= title %></h1>
+        <p>Welcome to <%= title %></p>
+
+        <div class="col-md-4 pb-3">
+            <form id="cities" action="/" method="get">
+            <select  id="select_city" class="form-select" name="city" onchange="onChangeCity(this)">
+                <% if(cities.length){
+                for(var i = 0;i < cities.length;i++) { %>
+                    <option value="<%= cities[i].label %>" <% if(selected_city=== cities[i].label ){ %> selected <% } %>><%=cities[i].label%></option>
+                <% }
+                } %>
+            </select>
+            </form>
+        </div>
+
+        <div class="col-12">
+            <% if(selected_city){ %>
+                La Temperature Moyenne de <span id="selected_city"><%= selected_city %></span> est <strong id="avg_temperature"><%=parseFloat(avg_temperature).toFixed(2)%></strong> °C
+            <% } %>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3 pt-4 mt-2">
+            <h6>Température Moyenne par Ville</h6>
+
+            <table id="avg_temperatures_table" class="table table-sm">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th class="sortable">Ville</th>
+                    <th>Température</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% if(avg_temperatures.length){
+                for(var i = 0;i < avg_temperatures.length;i++) { %>
+                    <tr>
+                        <td><%= i+1 %> </td><td> <%= avg_temperatures[i].ville %> </td>
+                    <td><%= parseFloat(avg_temperatures[i].avg_temperature).toFixed(2) %> °C</td>
+                    </tr>
+                <% }
+                } %>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-9 pt-4 mt-2">
+            <div class="responsive_table">
+                <h6>Température par Jour</h6>
+                <table id="temperature_table" class="table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th class="sortable">Ville</th>
+                        <th>Code Departement</th>
+                        <th>Température</th>
+                        <th>Jour</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% if(items.length){
+                    for(var i = 0;i < items.length;i++) { %>
+                        <tr>
+                            <td><%=items[i].id%></td>
+                            <td><%=items[i].ville%></td>
+                            <td><%=items[i].departement%></td>
+                            <td><%=items[i].temperature%></td>
+                            <td><%=items[i].jour%></td>
+                        </tr>
+                    <% }
+                    } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+  </body>
+
+</html>
