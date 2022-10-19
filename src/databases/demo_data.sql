@@ -1,5 +1,5 @@
 CREATE  DATABASE happinance;
-
+use happinance;
 create table Temperature (
 	id INT,
 	ville VARCHAR(19),

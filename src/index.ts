@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const  app = require('./src/app');
+const  app = require('./app');
 const  debug = require('debug')('happinance:server');
 const  http = require('http');
 const  port = normalizePort(process.env.PORT || '3000');

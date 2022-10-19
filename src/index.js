@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var app = require('./src/app');
+var app = require('./app');
 var debug = require('debug')('happinance:server');
 var http = require('http');
 var port = normalizePort(process.env.PORT || '3000');
@@ -10,10 +9,8 @@ var server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
-/**
- * Normalize a port into a number, string, or false.
- */
 function normalizePort(val) {
+    // @ts-ignore
     var port = parseInt(val, 10);
     if (isNaN(port)) {
         return val;
@@ -23,9 +20,6 @@ function normalizePort(val) {
     }
     return false;
 }
-/**
- * Event listener for HTTP server "error" event.
- */
 function onError(error) {
     if (error.syscall !== 'listen') {
         throw error;
@@ -46,9 +40,6 @@ function onError(error) {
             throw error;
     }
 }
-/**
- * Event listener for HTTP server "listening" event.
- */
 function onListening() {
     var addr = server.address();
     var bind = typeof addr === 'string'
