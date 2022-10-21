@@ -8,10 +8,10 @@ Create with MS Sql Server syntax:
 CREATE TABLE happinance.weather.Temperature
 (
     id INT PRIMARY KEY NOT NULL,
-    ville VARCHAR(50) NOT NULL,
-    departement VARCHAR(3) NOT NULL,
-    jour DATETIME NOT NULL,
-    temperature INT NOT NULL
+    ville VARCHAR(50),
+    departement VARCHAR(2),
+    temperature DECIMAL(3,1),
+    jour DATE
 )
 ````
 # 2. Question 2.
